@@ -10,12 +10,15 @@
 # 127.0.0.1:5453 as the upstream resolver.  We also need to configure
 # the wan interface to not use the ISP provided name server, but
 # rather use the local nameserver provided by dnsmasq at 127.0.0.1.
+# Also set dnsmasq to require DNSSEC validation.
 # Note: commit not needed here, as the uci-defaults script runs a
 # commit after each script
 uci -q batch <<-EOF
 add_list dhcp.@dnsmasq[-1].server='127.0.0.1#5453'
-set dhcp.@dnsmasq[0].dnssec=1
-dhcp.@dnsmasq[0].noresolv=1
+set dhcp.@dnsmasq[-1].dnssec=1
+set dhcp.@dnsmasq[-1].noresolv=1
+set dhcp.@dnsmasq[-1].dnssec=1
+set dhcp.@dnsmasq[-1].dnsseccheckunsigned=1
 set network.wan.peerdns='0'
 set network.wan.dns='127.0.0.1'
 EOF
